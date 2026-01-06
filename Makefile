@@ -108,7 +108,7 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 all: $(BUILD)
 
 $(BUILD):
-	@$(MAKE) -C $(WUPS_DIR) lib/libwups.a TOPDIR=$(WUPS_DIR)
+	@$(MAKE) --no-print-directory -C $(WUPS_DIR) lib/libwups.a TOPDIR=$(WUPS_DIR)
 	@$(MAKE) --no-print-directory -C $(LIBCONTENTREDIRECTION_DIR) TOPDIR=$(LIBCONTENTREDIRECTION_DIR)
 	@$(shell [ ! -d $(BUILD) ] && mkdir -p $(BUILD))
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile

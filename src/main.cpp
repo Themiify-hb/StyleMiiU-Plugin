@@ -384,6 +384,17 @@ void HandleThemes()
     return;
 }
 
+static std::size_t get_random_index(std::size_t size) {
+    static std::optional<std::minstd_rand> engine;
+    if (!engine) {
+        auto t = static_cast<std::uint64_t>(OSGetTime());
+        std::seed_seq seeder{static_cast<std::uint32_t>(t),
+                             static_cast<std::uint32_t>(t >> 32)};
+        engine.emplace(seeder);
+    }
+    std::uniform_int_distribution<std::size_t> dist{0, size - 1};
+    return dist(*engine);
+}
 
 ON_APPLICATION_START() {
     initLogging();
@@ -408,10 +419,7 @@ ON_APPLICATION_START() {
             }
 
             if (!enabledThemes.empty() && gThemeManagerEnabled) {
-                unsigned seed = static_cast<unsigned int>(OSGetTime());
-                std::mt19937 rng(seed);
-                std::shuffle(enabledThemes.begin(), enabledThemes.end(), rng);
-                size_t randomIndex = rng() % enabledThemes.size();
+                size_t randomIndex = get_random_index(enabledThemes.size());
                 gCurrentTheme = enabledThemes[randomIndex];
 
                 DEBUG_FUNCTION_LINE("Randomly selected theme: %s", gCurrentTheme.c_str());
