@@ -1,4 +1,5 @@
 # StyleMiiU
+
 This is an Aroma plugin to safely apply custom themes!
 
 Developed intending to straight forward as much as possible the process of applying custom themes to your Wii U Home Menu without running the risk of bricking your console.
@@ -6,14 +7,17 @@ Developed intending to straight forward as much as possible the process of apply
 **No system file is modified by this plugin.**
 
 Codebase is heavily based on SDCafiine's base.
+
 ## Installation
+
 (`[ENVIRONMENT]` is a placeholder for the actual environment name.)
-1. Copy the file `stylemiiu.wps` into `SD:/wiiu/environments/[ENVIRONMENT]/plugins`.
-2. Requires the [WiiUPluginLoaderBackend](https://github.com/wiiu-env/WiiUPluginLoaderBackend) and [ContentRedirectionModule](https://github.com/wiiu-env/ContentRedirectionModule) in `SD:/wiiu/environments/[ENVIRONMENT]/modules`.
+
+Copy the file `stylemiiu.wps` into `SD:/wiiu/environments/[ENVIRONMENT]/plugins`.
 
 If you happen to have installed an older version of this plugin, delete the previous `theme_manager.wps` and rename `SD:/wiiu/environments/[ENVIRONMENT]/plugins/config/theme_manager.json` to `style-mii-u.json`
 
 ## Usage
+
 This plugin can detect Men.pack, Men2.pack and cafe_barista_men.bfsar automatically to make the theme have any folder structure you desire. SDCaffine's file structure is still compatible with this plugin. *Additional files like AllMessage.szs do still need to be on their corresponding folder structure, like this: `SD:/wiiu/themes/[ThemeName]/content/[TheLanguageToPatch]/Message/AllMessage.szs`*
 
 Themes will only load from the `SD:/wiiu/themes` directory, it is recommended that you move all your themes from SDCafiine into the themes directory to avoid problems of both plugins trying to patch the Wii U Menu.
@@ -27,18 +31,22 @@ Additional options:
 - Shuffle themes: This option tries to mimic the 3DS' option of shuffling themes, you can use it by simply activating the option and then in **Available Themes**, select the themes you want to shuffle through. The themes will change **every time you restart the console or enter and exit to the menu**. If you disable this option, then the last theme you selected will become the default theme for it to fallback on.
 
 ## Troubleshooting
+
 The plugin will sometimes not work properly when certain race conditions are triggered. The most commons ones being described further in this file.
 
 ### Bootlooping on Wii U Menu splash
+
 The first reason might be you have both SDCafiine and StyleMiiU trying to patch a theme to the Wii U menu, which can cause issues. Moving themes from SDCafiine's directory to the theme's directory or disabling SDCafiine will usually solve this issue.
 
 This problem might also show up due to the fact that you're using a theme that hasn't been tested or properly made to support an European/PAL console. European/PAL consoles have more language packs built onto the menu menaning the file size on themes needs to be smaller to work properly. This is more likely to happen with animated themes or unoptimized themes.
 
 ### My theme isn't loading
+
 The most common issue would be having bad or corrupted Men.pack, Men2.pack or cafe_barista_men.bfsar files which makes the plugin unable to patch them on the Wii U Menu. This is highly unlikely to happen and the reason might also be the same as the bootlooping problem on EU consoles.
 
 
 ## Building
-Requires the [libcontentredirection](https://github.com/wiiu-env/libcontentredirection) and [wut](https://github.com/devkitPro/wut)
+
+Make sure to clone/pull the submodules (use the `--recurse-submodules` option).
 
 Should be as easy as running `make` and let it do its thing.

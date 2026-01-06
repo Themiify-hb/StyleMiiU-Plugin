@@ -1,0 +1,6 @@
+[submodule "external/libcontentredirection"]
+	path = external/libcontentredirection
+	url = https://github.com/wiiu-env/libcontentredirection.git
+[submodule "external/WiiUPluginSystem"]
+	path = external/WiiUPluginSystem
+	url = https://github.com/wiiu-env/WiiUPluginSystem.git

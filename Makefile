@@ -8,7 +8,11 @@ endif
 
 TOPDIR ?= $(CURDIR)
 
-include $(DEVKITPRO)/wups/share/wups_rules
+LIBCONTENTREDIRECTION_DIR := $(TOPDIR)/external/libcontentredirection
+WUPS_DIR := $(TOPDIR)/external/WiiUPluginSystem
+WUPS_ROOT := $(WUPS_DIR)
+
+include $(WUPS_DIR)/share/wups_rules
 
 WUT_ROOT := $(DEVKITPRO)/wut
 WUMS_ROOT := $(DEVKITPRO)/wums
@@ -28,12 +32,15 @@ INCLUDES	:=	src src/utils src/fs src/utils/ModifiedWUPS
 #-------------------------------------------------------------------------------
 # options for code generation
 #-------------------------------------------------------------------------------
+
+CXX += -std=c++20
+
 CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(MACHDEP)
 
 CFLAGS	+=	$(INCLUDE) -D__WIIU__ -D__WUT__ -D__WUPS__ 
 
-CXXFLAGS	:= $(CFLAGS) -std=c++20
+CXXFLAGS	:= $(CFLAGS)
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-g $(ARCH) $(RPXSPECS) -Wl,-Map,$(notdir $*.map) $(WUPSSPECS) 
@@ -44,7 +51,11 @@ LIBS	:= -lwups -lwut -lcontentredirection
 # list of directories containing libraries, this must be the top level
 # containing include and lib
 #-------------------------------------------------------------------------------
-LIBDIRS	:= $(PORTLIBS) $(WUPS_ROOT) $(WUT_ROOT) $(WUMS_ROOT)
+LIBDIRS	:= \
+	$(PORTLIBS) \
+	$(WUPS_ROOT) \
+	$(LIBCONTENTREDIRECTION_DIR) \
+	$(WUT_ROOT)
 
 #-------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -97,6 +108,8 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 all: $(BUILD)
 
 $(BUILD):
+	@$(MAKE) -C $(WUPS_DIR) lib/libwups.a TOPDIR=$(WUPS_DIR)
+	@$(MAKE) --no-print-directory -C $(LIBCONTENTREDIRECTION_DIR) TOPDIR=$(LIBCONTENTREDIRECTION_DIR)
 	@$(shell [ ! -d $(BUILD) ] && mkdir -p $(BUILD))
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
@@ -104,6 +117,8 @@ $(BUILD):
 clean:
 	@echo clean ...
 	@rm -fr $(BUILD) $(TARGET).wps $(TARGET).elf
+	@$(MAKE) --no-print-directory -C $(LIBCONTENTREDIRECTION_DIR) clean TOPDIR=$(LIBCONTENTREDIRECTION_DIR)
+	@$(MAKE) --no-print-directory -C $(WUPS_DIR) clean TOPDIR=$(WUPS_DIR)
 
 #-------------------------------------------------------------------------------
 else
