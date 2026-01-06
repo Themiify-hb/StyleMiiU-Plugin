@@ -1,3 +1,5 @@
 FROM devkitpro/devkitppc
 
-WORKDIR project
+COPY . /project
+
+WORKDIR /project
