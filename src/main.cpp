@@ -427,30 +427,72 @@ void HandleThemes()
     std::string cafeBaristaPath = "";
     std::string contentPath = "";
 
-    if (gMashupThemes && gShuffleThemes && enabledThemes.size() >= 3) {
+    if (gMashupThemes && gShuffleThemes)
+    {
         std::string tempMenPack, tempMen2Pack, tempCafeBarista;
-        std::string menPackThemePath = std::string(theme_directory_path).append(enabledThemes[get_random_index(enabledThemes.size())]);
-        
-        SearchThemeFiles(menPackThemePath, menPackPath, tempMen2Pack, tempCafeBarista);
 
-        std::string men2PackThemePath = std::string(theme_directory_path).append(enabledThemes[get_random_index(enabledThemes.size())]);
-        tempMenPack.clear();
-        tempMen2Pack.clear();
-        tempCafeBarista.clear();
+        std::string menPackTheme;
+        int attempts = 0;
+        const int maxAttempts = enabledThemes.size() * 2;
         
-        SearchThemeFiles(men2PackThemePath, tempMenPack, men2PackPath, tempCafeBarista);
+        while (menPackPath.empty() && attempts < maxAttempts) {
+            size_t randomIndex = get_random_index(enabledThemes.size());
+            std::string themePath = std::string(theme_directory_path).append(enabledThemes[randomIndex]);
+            
+            tempMenPack.clear();
+            tempMen2Pack.clear();
+            tempCafeBarista.clear();
+            
+            SearchThemeFiles(themePath, tempMenPack, tempMen2Pack, tempCafeBarista);
+            
+            if (!tempMenPack.empty()) {
+                menPackPath = tempMenPack;
+                menPackTheme = enabledThemes[randomIndex];
+                break;
+            }
+            attempts++;
+        }
+        
+        attempts = 0;
+        while (men2PackPath.empty() && attempts < maxAttempts) {
+            size_t randomIndex = get_random_index(enabledThemes.size());
+            std::string themePath = std::string(theme_directory_path).append(enabledThemes[randomIndex]);
 
-        std::string cafeBaristaThemePath = std::string(theme_directory_path).append(enabledThemes[get_random_index(enabledThemes.size())]);
-        tempMenPack.clear();
-        tempMen2Pack.clear();
-        tempCafeBarista.clear();
+            tempMenPack.clear();
+            tempMen2Pack.clear();
+            tempCafeBarista.clear();
+            
+            SearchThemeFiles(themePath, tempMenPack, tempMen2Pack, tempCafeBarista);
+            
+            if (!tempMen2Pack.empty()) {
+                men2PackPath = tempMen2Pack;
+                break;
+            }
+            attempts++;
+        }
         
-        SearchThemeFiles(cafeBaristaThemePath, tempMenPack, tempMen2Pack, cafeBaristaPath);
-        
+        attempts = 0;
+        while (cafeBaristaPath.empty() && attempts < maxAttempts) {
+            size_t randomIndex = get_random_index(enabledThemes.size());
+            std::string themePath = std::string(theme_directory_path).append(enabledThemes[randomIndex]);
+            
+            tempMenPack.clear();
+            tempMen2Pack.clear();
+            tempCafeBarista.clear();
+            
+            SearchThemeFiles(themePath, tempMenPack, tempMen2Pack, tempCafeBarista);
+            
+            if (!tempCafeBarista.empty()) {
+                cafeBaristaPath = tempCafeBarista;
+                break;
+            }
+            attempts++;
+        }
+
         struct stat st {};
-        contentPath = menPackThemePath + "/content";
+        contentPath = std::string(theme_directory_path).append(menPackTheme) + "/content";
         if(stat(contentPath.c_str(), &st) != 0){
-            contentPath = menPackThemePath + "/Content";
+            contentPath = std::string(theme_directory_path).append(menPackTheme) + "/Content";
             if(stat(contentPath.c_str(), &st) != 0){
                 contentPath = "";
             }

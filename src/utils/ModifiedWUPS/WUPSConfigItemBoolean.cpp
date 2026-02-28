@@ -13,10 +13,22 @@ static void WUPSConfigItemBoolean_onCloseCallback(void *context) {
     }
 }
 
+bool displayMashupWarn = false;
+
 static inline void toggleValue(ConfigItemBoolean *item) {
+    if(std::string_view(MASHUP_THEMES_STRING) == item->identifier && !shuffleEnabled){
+        displayMashupWarn = true;
+        return;
+    }
+
     item->value = !item->value;
     if(std::string_view(SHUFFLE_THEMES_STRING) == item->identifier){
         shuffleEnabled = item->value;
+
+        if(!item->value)
+            gMashupThemes = item->value;
+
+        displayMashupWarn = false;
     }
 }
 
@@ -32,12 +44,23 @@ static void WUPSConfigItemBoolean_onInput(void *context, WUPSConfigSimplePadData
 }
 static int32_t WUPSConfigItemBoolean_getCurrentValueDisplay(void *context, char *out_buf, int32_t out_size) {
     auto *item = (ConfigItemBoolean *) context;
+
+    if(std::string_view(MASHUP_THEMES_STRING) == item->identifier && !shuffleEnabled)
+        item->value = false;
+
     snprintf(out_buf, out_size, "  %s", item->value ? item->trueValue : item->falseValue);
     return 0;
 }
 
 static int32_t WUPSConfigItemBoolean_getCurrentValueSelectedDisplay(void *context, char *out_buf, int32_t out_size) {
     auto *item = (ConfigItemBoolean *) context;
+
+    if(displayMashupWarn && std::string_view(MASHUP_THEMES_STRING) == item->identifier)
+    {
+        snprintf(out_buf, out_size, "Shuffle themes also needs to be enabled");
+        return 0;
+    }
+
     if (item->value) {
         snprintf(out_buf, out_size, "  %s >", item->trueValue);
     } else {

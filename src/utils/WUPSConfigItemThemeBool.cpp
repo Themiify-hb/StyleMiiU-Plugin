@@ -43,7 +43,7 @@ static int32_t WUPSConfigItemThemeBool_getCurrentValueDisplay(void *context, cha
             snprintf(out_buf, out_size, "  Favorite");
         } else {
             if (!enabledThemes.empty() && enabledThemes[0] == item->identifier) {
-                snprintf(out_buf, out_size, "  Current Theme");
+                snprintf(out_buf, out_size, "  Current theme");
             } else {
                 item->value = false;
                 snprintf(out_buf, out_size, "  ");
@@ -59,15 +59,15 @@ static int32_t WUPSConfigItemThemeBool_getCurrentValueSelectedDisplay(void *cont
     if (!item->value) {
         snprintf(out_buf, out_size, shuffleEnabled 
         ? "  Press \ue000 to add to favorites" 
-        : "  Press \ue000 to set as Current Theme");
+        : "  Press \ue000 to set as current theme");
     } else {
         if(shuffleEnabled) {
             snprintf(out_buf, out_size, "  Press \ue000 to remove from favorites");
         } else {
             if (!enabledThemes.empty() && enabledThemes[0] == item->identifier) {
-                snprintf(out_buf, out_size, "  Press \ue000 to disable Current Theme");
+                snprintf(out_buf, out_size, "  Press \ue000 to disable current theme");
             } else {
-                snprintf(out_buf, out_size, "  Press \ue000 to set as Current Theme");
+                snprintf(out_buf, out_size, "  Press \ue000 to set as current theme");
             }
         }
     }
