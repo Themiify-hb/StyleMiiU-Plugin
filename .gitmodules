@@ -4,3 +4,6 @@
 [submodule "external/WiiUPluginSystem"]
 	path = external/WiiUPluginSystem
 	url = https://github.com/wiiu-env/WiiUPluginSystem.git
+[submodule "external/libnotifications"]
+	path = external/libnotifications
+	url = https://github.com/wiiu-env/libnotifications.git

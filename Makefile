@@ -9,6 +9,7 @@ endif
 TOPDIR ?= $(CURDIR)
 
 LIBCONTENTREDIRECTION_DIR := $(TOPDIR)/external/libcontentredirection
+LIBNOTIFICATIONS_DIR := $(TOPDIR)/external/libnotifications
 WUPS_DIR := $(TOPDIR)/external/WiiUPluginSystem
 WUPS_ROOT := $(WUPS_DIR)
 
@@ -45,7 +46,7 @@ CXXFLAGS	:= $(CFLAGS)
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-g $(ARCH) $(RPXSPECS) -Wl,-Map,$(notdir $*.map) $(WUPSSPECS) 
 
-LIBS	:= -lwups -lwut -lcontentredirection
+LIBS	:= -lwups -lwut -lcontentredirection -lnotifications
 
 #-------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level
@@ -55,6 +56,7 @@ LIBDIRS	:= \
 	$(PORTLIBS) \
 	$(WUPS_ROOT) \
 	$(LIBCONTENTREDIRECTION_DIR) \
+	$(LIBNOTIFICATIONS_DIR) \
 	$(WUT_ROOT)
 
 #-------------------------------------------------------------------------------
@@ -110,6 +112,7 @@ all: $(BUILD)
 $(BUILD):
 	@$(MAKE) --no-print-directory -C $(WUPS_DIR) lib/libwups.a TOPDIR=$(WUPS_DIR)
 	@$(MAKE) --no-print-directory -C $(LIBCONTENTREDIRECTION_DIR) TOPDIR=$(LIBCONTENTREDIRECTION_DIR)
+	@$(MAKE) --no-print-directory -C $(LIBNOTIFICATIONS_DIR) TOPDIR=$(LIBNOTIFICATIONS_DIR)
 	@$(shell [ ! -d $(BUILD) ] && mkdir -p $(BUILD))
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
@@ -118,6 +121,7 @@ clean:
 	@echo clean ...
 	@rm -fr $(BUILD) $(TARGET).wps $(TARGET).elf
 	@$(MAKE) --no-print-directory -C $(LIBCONTENTREDIRECTION_DIR) clean TOPDIR=$(LIBCONTENTREDIRECTION_DIR)
+	@$(MAKE) --no-print-directory -C $(LIBNOTIFICATIONS_DIR) clean TOPDIR=$(LIBNOTIFICATIONS_DIR)
 	@$(MAKE) --no-print-directory -C $(WUPS_DIR) clean TOPDIR=$(WUPS_DIR)
 
 #-------------------------------------------------------------------------------
