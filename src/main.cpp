@@ -304,9 +304,8 @@ static void ConfigMenuClosedCallback() {
     }
 }
 
-void ReloadConfig()
+void ReloadConfig(WUPSStorageError err)
 {
-    WUPSStorageError err;
     if ((err = WUPSStorageAPI::GetOrStoreDefault(THEME_MANAGER_ENABLED_STRING, gThemeManagerEnabled, DEFAULT_THEME_MANAGER_ENABLED)) != WUPS_STORAGE_ERROR_SUCCESS) {
         DEBUG_FUNCTION_LINE_ERR("Failed to get or create item \"%s\": %s (%d)", THEME_MANAGER_ENABLED_STRING, WUPSStorageAPI_GetStatusStr(err), err);
     }
@@ -322,6 +321,23 @@ void ReloadConfig()
     if ((err = WUPSStorageAPI::GetOrStoreDefault(THEME_NOTIFICATION_STRING, notificationsEnabled, DEFAULT_THEME_NOTIFICATION)) != WUPS_STORAGE_ERROR_SUCCESS) {
         DEBUG_FUNCTION_LINE_ERR("Failed to get or create item \"%s\": %s (%d)", MASHUP_THEMES_STRING, WUPSStorageAPI_GetStatusStr(err), err);
     }
+}
+
+INITIALIZE_PLUGIN() {
+    ContentRedirectionStatus error;
+    if ((error = ContentRedirection_InitLibrary()) != CONTENT_REDIRECTION_RESULT_SUCCESS) {
+        DEBUG_FUNCTION_LINE_ERR("Failed to init ContentRedirection. Error %s %d", ContentRedirection_GetStatusStr(error), error);
+        OSFatal("Failed to init ContentRedirection.");
+    }
+    
+    if (NotificationModule_InitLibrary() != NOTIFICATION_MODULE_RESULT_SUCCESS) {
+        DEBUG_FUNCTION_LINE("NotificationModule_InitLibrary failed");
+        notificationsEnabled = false;
+    }
+
+    WUPSStorageError err;
+
+    ReloadConfig(err);
 
     std::string blank = "";
     if((err = WUPSStorageAPI::Get("enabledThemes", blank)) != WUPS_STORAGE_ERROR_SUCCESS){
@@ -339,21 +355,6 @@ void ReloadConfig()
     if ((err = WUPSStorageAPI::SaveStorage()) != WUPS_STORAGE_ERROR_SUCCESS) {
         DEBUG_FUNCTION_LINE_ERR("Failed to save storage: %s (%d)", WUPSStorageAPI_GetStatusStr(err), err);
     }
-}
-
-INITIALIZE_PLUGIN() {
-    ContentRedirectionStatus error;
-    if ((error = ContentRedirection_InitLibrary()) != CONTENT_REDIRECTION_RESULT_SUCCESS) {
-        DEBUG_FUNCTION_LINE_ERR("Failed to init ContentRedirection. Error %s %d", ContentRedirection_GetStatusStr(error), error);
-        OSFatal("Failed to init ContentRedirection.");
-    }
-    
-    if (NotificationModule_InitLibrary() != NOTIFICATION_MODULE_RESULT_SUCCESS) {
-        DEBUG_FUNCTION_LINE("NotificationModule_InitLibrary failed");
-        notificationsEnabled = false;
-    }
-
-    ReloadConfig();
 
     WUPSConfigAPIOptionsV1 configOptions = {.name = "StyleMiiU"};
     WUPSConfigAPIStatus configErr;
@@ -572,9 +573,9 @@ ON_APPLICATION_START() {
     if(!is_wiiu_menu) return;
 
     WUPSStorageAPI::ForceReloadStorage();
-    ReloadConfig();
-
+    
     WUPSStorageError err;
+    ReloadConfig(err);
 
     if (gShuffleThemes) {
         if((err = WUPSStorageAPI::Get("enabledThemes", gFavoriteThemes)) == WUPS_STORAGE_ERROR_SUCCESS){

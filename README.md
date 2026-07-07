@@ -14,8 +14,6 @@ This plugin's codebase is heavily based on SDCafiine.
 
 Copy the file `stylemiiu.wps` into `SD:/wiiu/environments/[ENVIRONMENT]/plugins`.
 
-If you happen to have installed an older version of this plugin, delete the previous `theme_manager.wps` and rename `SD:/wiiu/environments/[ENVIRONMENT]/plugins/config/theme_manager.json` to `style-mii-u.json`
-
 ## Usage
 
 This plugin can detect Men.pack, Men2.pack and cafe_barista_men.bfsar automatically to make the theme have any folder structure you desire. SDCaffine's file structure is still compatible with this plugin. *Additional files like AllMessage.szs do still need to be on their corresponding folder structure, like this: `SD:/wiiu/themes/[ThemeName]/content/[TheLanguageToPatch]/Message/AllMessage.szs`*
