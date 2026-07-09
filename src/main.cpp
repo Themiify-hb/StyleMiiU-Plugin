@@ -575,6 +575,7 @@ ON_APPLICATION_START() {
     ReloadConfig();
 
     WUPSStorageError err;
+    enabledThemes.clear();
     if (gShuffleThemes) {
         if((err = WUPSStorageAPI::Get("enabledThemes", gFavoriteThemes)) == WUPS_STORAGE_ERROR_SUCCESS){
             std::vector<std::string> splitThemes = StringTools::stringSplit(gFavoriteThemes, "|");
