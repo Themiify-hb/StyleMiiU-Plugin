@@ -6,7 +6,7 @@
 
 #include <content_redirection/redirection.h>
 
-#define VERSION "v0.5.2+"
+#define VERSION "v0.5.3"
 
 #define KEY_THEME_MANAGER_ENABLED "themeManagerEnabled"
 #define KEY_SHUFFLE_THEMES        "suffleThemes"
